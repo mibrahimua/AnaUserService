@@ -4,47 +4,58 @@
         "contact": {}
     },
     "paths": {
-        "/register": {
+        "/login": {
             "post": {
-                "description": "Register a new user with email and phone",
+                "description": "Get User By Id",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Register a new user",
+                "summary": "Get User By Id",
                 "parameters": [
                     {
-                        "description": "User object for registration",
-                        "name": "user",
+                        "description": "Credentials Info",
+                        "name": "credentials",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.User"
+                            "$ref": "#/definitions/request.Login"
                         }
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "User registered successfully",
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/model.User"
                         }
-                    },
-                    "400": {
-                        "description": "Invalid input data",
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "Get User By Id",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get User By Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "409": {
-                        "description": "Email or phone number already registered",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/model.User"
                         }
                     }
                 }
@@ -52,7 +63,7 @@
         }
     },
     "definitions": {
-        "main.User": {
+        "model.User": {
             "type": "object",
             "properties": {
                 "email": {
@@ -62,10 +73,27 @@
                     "type": "integer"
                 },
                 "password": {
-                    "description": "In practice, hash the password before storing it",
                     "type": "string"
                 },
                 "phone": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.Login": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }

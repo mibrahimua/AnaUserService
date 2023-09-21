@@ -1,47 +1,65 @@
 definitions:
-  main.User:
+  model.User:
     properties:
       email:
         type: string
       id:
         type: integer
       password:
-        description: In practice, hash the password before storing it
         type: string
       phone:
         type: string
+      username:
+        type: string
+    type: object
+  request.Login:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
     type: object
 info:
   contact: {}
 paths:
-  /register:
+  /login:
     post:
       consumes:
       - application/json
-      description: Register a new user with email and phone
+      description: Get User By Id
       parameters:
-      - description: User object for registration
+      - description: Credentials Info
         in: body
-        name: user
+        name: credentials
         required: true
         schema:
-          $ref: '#/definitions/main.User'
+          $ref: '#/definitions/request.Login'
       produces:
       - application/json
       responses:
-        "201":
-          description: User registered successfully
+        "200":
+          description: OK
           schema:
-            type: string
-        "400":
-          description: Invalid input data
+            $ref: '#/definitions/model.User'
+      summary: Get User By Id
+  /users/{id}:
+    get:
+      description: Get User By Id
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
-            type: string
-        "409":
-          description: Email or phone number already registered
-          schema:
-            type: string
-      summary: Register a new user
-      tags:
-      - users
+            $ref: '#/definitions/model.User'
+      summary: Get User By Id
 swagger: "2.0"
