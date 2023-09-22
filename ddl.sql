@@ -129,6 +129,7 @@ CREATE TABLE cart (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     is_paid bool DEFAULT FALSE,
+    released_stock bool DEFAULT FALSE,
     FOREIGN KEY (users_id) REFERENCES users(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
