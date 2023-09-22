@@ -14,32 +14,6 @@ VALUES
     ('user2@example.com', 'password', '987-654-3210'),
     ('user3@example.com', 'password', '555-555-5555');
 
--- Create the cart table with hold_duration column
-CREATE TABLE cart (
-    id SERIAL PRIMARY KEY,
-    users_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    hold_duration INTERVAL DEFAULT INTERVAL '30 minutes', -- Default hold duration is 24 hours
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW(),
-    FOREIGN KEY (users_id) REFERENCES users(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
-);
-
--- Insert dummy data into the cart table
-INSERT INTO cart (users_id, product_id, quantity)
-VALUES
-    (1, 1, 2), -- User 1 adds 2 units of Product 1 to their cart
-    (1, 2, 3), -- User 1 adds 3 units of Product 2 to their cart
-    (2, 3, 1), -- User 2 adds 1 unit of Product 3 to their cart
-    (3, 1, 1); -- User 3 adds 1 unit of Product 1 to their cart
-
--- -- Release stocks that have exceeded the hold_duration
--- DELETE FROM cart
--- WHERE updated_at < NOW() - hold_duration;
-
-
 -- Create the Order Table
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
@@ -123,6 +97,7 @@ CREATE TABLE product_stock (
 INSERT INTO product_stock (product_id, warehouse_id, stock_quantity)
 VALUES
     (1, 1, 50), -- 50 laptops in Warehouse A
+    (1, 2, 50), -- 50 laptops in Warehouse A
     (2, 1, 100), -- 100 chairs in Warehouse A
     (3, 2, 75), -- 75 drills in Warehouse B
     (4, 2, 200); -- 200 t-shirts in Warehouse B;
@@ -143,3 +118,29 @@ VALUES
     (1, 1, 2, 10), -- Transfer 10 laptops from Warehouse A to Warehouse B
     (3, 2, 1, 5); -- Transfer 5 drills from Warehouse B to Warehouse A;
 
+
+-- Create the cart table with hold_duration column
+CREATE TABLE cart (
+    id SERIAL PRIMARY KEY,
+    users_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    hold_duration INTERVAL DEFAULT INTERVAL '30 minutes', -- Default hold duration is 24 hours
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    is_paid bool DEFAULT FALSE,
+    FOREIGN KEY (users_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+-- Insert dummy data into the cart table
+INSERT INTO cart (users_id, product_id, quantity)
+VALUES
+    (1, 1, 2), -- User 1 adds 2 units of Product 1 to their cart
+    (1, 2, 3), -- User 1 adds 3 units of Product 2 to their cart
+    (2, 3, 1), -- User 2 adds 1 unit of Product 3 to their cart
+    (3, 1, 1); -- User 3 adds 1 unit of Product 1 to their cart
+
+-- -- Release stocks that have exceeded the hold_duration
+-- DELETE FROM cart
+-- WHERE updated_at < NOW() - hold_duration;
